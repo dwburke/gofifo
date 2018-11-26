@@ -7,8 +7,7 @@ import (
 
 	"github.com/streadway/simpleuuid"
 	"github.com/syndtr/goleveldb/leveldb"
-	//leveldb_errors "github.com/syndtr/goleveldb/leveldb/errors"
-	//"container/list"
+	leveldb_errors "github.com/syndtr/goleveldb/leveldb/errors"
 )
 
 type Fifo struct {
@@ -62,22 +61,27 @@ func (fifo *Fifo) Push(obj interface{}) (err error) {
 }
 
 // https://play.golang.org/p/tfjGBp48-ZV
-func (fifo *Fifo) Pop() interface{} {
-	//data, err := ldb.Get([]byte(key), nil)
+func (fifo *Fifo) Pop(obj interface{}) (err error) {
+
+	err = leveldb_errors.ErrNotFound
 
 	iter := fifo.ldb.NewIterator(nil, nil)
 	defer iter.Release()
 
-	var obj interface{}
-
 	for iter.Next() {
+		var key = string(iter.Key())
 		value := iter.Value()
 		pCache := bytes.NewBuffer(value)
 		decCache := gob.NewDecoder(pCache)
-		decCache.Decode(&obj)
-		return obj
-		break
+
+		err = decCache.Decode(obj)
+		if err != nil {
+			return
+		}
+
+		fifo.ldb.Delete([]byte(key), nil)
+		return
 	}
 
-	return nil
+	return
 }
