@@ -75,6 +75,7 @@ func (fifo *Fifo) Pop() interface{} {
 		pCache := bytes.NewBuffer(value)
 		decCache := gob.NewDecoder(pCache)
 		decCache.Decode(&obj)
+		return obj
 		break
 	}
 
