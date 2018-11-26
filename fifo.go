@@ -27,6 +27,13 @@ func NewFifo(datadir string) (*Fifo, error) {
 	return fifo, nil
 }
 
+func (fifo *Fifo) Close() {
+	if fifo.ldb != nil {
+		fifo.ldb.Close()
+		fifo.ldb = nil
+	}
+}
+
 func (fifo *Fifo) GobRegister(t interface{}) {
 	gob.Register(t)
 }
