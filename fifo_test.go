@@ -3,24 +3,39 @@ package gofifo_test
 import (
 	"reflect"
 	"testing"
+	"time"
+
+	leveldb_errors "github.com/syndtr/goleveldb/leveldb/errors"
 
 	"github.com/dwburke/gofifo"
 )
+
+type Fuu struct {
+	Name string
+	Time time.Time
+}
 
 func TestSetRoom(t *testing.T) {
 	fifo, err := gofifo.NewFifo("test")
 	expect(t, err, nil, "")
 	defer fifo.Close()
 
-	err = fifo.Push("test string")
+	fifo.GobRegister(Fuu{})
+
+	rec := &Fuu{
+		Name: "foo",
+		Time: time.Now(),
+	}
+	err = fifo.Push(rec)
 	expect(t, err, nil, "")
 
-	obj := fifo.Pop()
-	t.Log(obj)
+	var obj = Fuu{}
+	err = fifo.Pop(&obj)
+	expect(t, err, nil, "")
 
-	if obj == nil {
-		t.Errorf("Expected object - Got [nil]")
-	}
+	err = fifo.Pop(&obj)
+	expect(t, err.Error(), leveldb_errors.ErrNotFound.Error(), "")
+
 }
 
 func expect(t *testing.T, a interface{}, b interface{}, body string) {
