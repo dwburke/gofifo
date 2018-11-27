@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/gob"
 	"errors"
+	"sync"
 	"time"
 
 	"github.com/streadway/simpleuuid"
@@ -14,6 +15,7 @@ var Empty = errors.New("fifo: empty")
 
 type Fifo struct {
 	ldb *leveldb.DB
+	mux sync.Mutex
 }
 
 func NewFifo(datadir string) (*Fifo, error) {
@@ -63,6 +65,8 @@ func (fifo *Fifo) Push(obj interface{}) (err error) {
 }
 
 func (fifo *Fifo) Pop(obj interface{}) (err error) {
+	fifo.mux.Lock()
+	defer fifo.mux.Unlock()
 
 	err = Empty
 
