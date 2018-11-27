@@ -5,8 +5,6 @@ import (
 	"testing"
 	"time"
 
-	leveldb_errors "github.com/syndtr/goleveldb/leveldb/errors"
-
 	"github.com/dwburke/gofifo"
 )
 
@@ -34,7 +32,7 @@ func TestSetRoom(t *testing.T) {
 	expect(t, err, nil, "")
 
 	err = fifo.Pop(&obj)
-	expect(t, err.Error(), leveldb_errors.ErrNotFound.Error(), "")
+	expect(t, err, gofifo.Empty, "")
 
 	var str string
 	err = fifo.Push("this is a string")

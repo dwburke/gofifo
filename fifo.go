@@ -3,12 +3,14 @@ package gofifo
 import (
 	"bytes"
 	"encoding/gob"
+	"errors"
 	"time"
 
 	"github.com/streadway/simpleuuid"
 	"github.com/syndtr/goleveldb/leveldb"
-	leveldb_errors "github.com/syndtr/goleveldb/leveldb/errors"
 )
+
+var Empty = errors.New("fifo: empty")
 
 type Fifo struct {
 	ldb *leveldb.DB
@@ -60,10 +62,9 @@ func (fifo *Fifo) Push(obj interface{}) (err error) {
 	return
 }
 
-// https://play.golang.org/p/tfjGBp48-ZV
 func (fifo *Fifo) Pop(obj interface{}) (err error) {
 
-	err = leveldb_errors.ErrNotFound
+	err = Empty
 
 	iter := fifo.ldb.NewIterator(nil, nil)
 	defer iter.Release()
