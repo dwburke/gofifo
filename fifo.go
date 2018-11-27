@@ -35,7 +35,7 @@ func (fifo *Fifo) Close() {
 	}
 }
 
-func (fifo *Fifo) GobRegister(t interface{}) {
+func (fifo *Fifo) Register(t interface{}) {
 	gob.Register(t)
 }
 

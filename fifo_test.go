@@ -18,7 +18,7 @@ func TestSetRoom(t *testing.T) {
 	expect(t, err, nil, "")
 	defer fifo.Close()
 
-	fifo.GobRegister(Fuu{})
+	fifo.Register(Fuu{})
 
 	rec := &Fuu{
 		Name: "foo",
