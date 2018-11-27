@@ -36,6 +36,13 @@ func TestSetRoom(t *testing.T) {
 	err = fifo.Pop(&obj)
 	expect(t, err.Error(), leveldb_errors.ErrNotFound.Error(), "")
 
+	var str string
+	err = fifo.Push("this is a string")
+	expect(t, err, nil, "")
+
+	err = fifo.Pop(&str)
+	expect(t, err, nil, "")
+	expect(t, str, "this is a string", "")
 }
 
 func expect(t *testing.T, a interface{}, b interface{}, body string) {
