@@ -24,21 +24,21 @@ func TestSetRoom(t *testing.T) {
 		Name: "foo",
 		Time: time.Now(),
 	}
-	err = fifo.Push(rec)
+	err = fifo.Enqueue(rec)
 	expect(t, err, nil, "")
 
 	var obj = Fuu{}
-	err = fifo.Pop(&obj)
+	err = fifo.Dequeue(&obj)
 	expect(t, err, nil, "")
 
-	err = fifo.Pop(&obj)
+	err = fifo.Dequeue(&obj)
 	expect(t, err, gofifo.Empty, "")
 
 	var str string
-	err = fifo.Push("this is a string")
+	err = fifo.Enqueue("this is a string")
 	expect(t, err, nil, "")
 
-	err = fifo.Pop(&str)
+	err = fifo.Dequeue(&str)
 	expect(t, err, nil, "")
 	expect(t, str, "this is a string", "")
 }

@@ -31,14 +31,14 @@ func main() {
 		Name: "foo",
 		Time: time.Now(),
 	}
-	err = fifo.Push(rec)
+	err = fifo.Enqueue(rec)
 	if err != nil {
 		panic(err)
 	}
 
 	while (1) {
 		var obj = Fuu{}
-		err = fifo.Pop(&obj)
+		err = fifo.Dequeue(&obj)
 		if err != nil {
 			if err == gofifo.Empty {
 				break

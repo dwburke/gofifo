@@ -50,7 +50,7 @@ func (fifo *Fifo) nextId() (string, error) {
 	return uuid.String(), nil
 }
 
-func (fifo *Fifo) Push(obj interface{}) (err error) {
+func (fifo *Fifo) Enqueue(obj interface{}) (err error) {
 	uuid, err := fifo.nextId()
 	if err != nil {
 		return
@@ -64,7 +64,7 @@ func (fifo *Fifo) Push(obj interface{}) (err error) {
 	return
 }
 
-func (fifo *Fifo) Pop(obj interface{}) (err error) {
+func (fifo *Fifo) Dequeue(obj interface{}) (err error) {
 	fifo.mux.Lock()
 	defer fifo.mux.Unlock()
 
